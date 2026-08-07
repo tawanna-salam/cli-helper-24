@@ -1,31 +1,35 @@
 import json
 import os
 
-DEFAULT_CONFIG = {
-    'app_name': 'CLI Helper',
-    'version': '1.0',
-    'max_retries': 5,
-    'timeout': 30,
-    'log_level': 'INFO'
-}
-
 class ConfigLoader:
-    def __init__(self, config_file=None):
-        self.config_file = config_file
-        self.config = DEFAULT_CONFIG.copy()
-        if self.config_file:
-            self.load_config()
+    def __init__(self, default_config_path, user_config_path):
+        self.default_config_path = default_config_path
+        self.user_config_path = user_config_path
+        self.config = self.load_config()
 
     def load_config(self):
-        if os.path.exists(self.config_file):
-            with open(self.config_file, 'r') as f:
-                user_config = json.load(f)
-                self.config.update(user_config)
-        else:
-            raise FileNotFoundError(f"Config file {self.config_file} not found.")
+        # Load default configuration
+        config = self.load_json(self.default_config_path)
+        # Load user configuration, if it exists
+        user_config = self.load_json(self.user_config_path)
+        if user_config:
+            config.update(user_config)  # Override defaults with user settings
+        return config
 
-    def get(self, key, default=None):
-        return self.config.get(key, default)
+    def load_json(self, path):
+        try:
+            if os.path.exists(path):
+                with open(path, 'r') as f:
+                    return json.load(f)
+            return {}
+        except json.JSONDecodeError:
+            print(f'Error reading JSON from {path}')
+            return {}
+        except Exception as e:
+            print(f'Unexpected error: {e}')
+            return {}
 
-    def __str__(self):
-        return json.dumps(self.config, indent=4)
+# Example usage:
+if __name__ == '__main__':
+    loader = ConfigLoader('default_config.json', 'user_config.json')
+    print(loader.config)  # Output the loaded configuration
