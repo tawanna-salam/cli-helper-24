@@ -1,48 +1,45 @@
-from typing import List, Optional
+from typing import List, Dict, Any
 
 
-def clean_string(input_string: str) -> str:
+def filter_even_numbers(numbers: List[int]) -> List[int]:
     """
-    Cleans the input string by stripping whitespace
-    and converting it to lowercase.
-    
+    Filters the even numbers from a given list.
+
     Args:
-        input_string (str): The string to be cleaned.
-    
+        numbers (List[int]): A list of integers.
+
     Returns:
-        str: The cleaned string.
+        List[int]: A list containing only even integers.
     """
-    return input_string.strip().lower()
+    return [number for number in numbers if number % 2 == 0]
 
 
-def filter_numbers(numbers: List[Optional[int]], threshold: int) -> List[int]:
+def merge_dictionaries(dict1: Dict[str, Any], dict2: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Filters out invalid numbers and retains those that
-    are greater than the specified threshold.
-    
+    Merges two dictionaries into one, with dict2 values overwriting dict1 values if keys overlap.
+
     Args:
-        numbers (List[Optional[int]]): A list of integers, may contain None.
-        threshold (int): The threshold to filter numbers.
-    
+        dict1 (Dict[str, Any]): The first dictionary.
+        dict2 (Dict[str, Any]): The second dictionary.
+
     Returns:
-        List[int]: A list of integers greater than the threshold.
+        Dict[str, Any]: A new merged dictionary.
     """
-    return [num for num in numbers if num is not None and num > threshold]
+    merged_dict = dict1.copy()
+    merged_dict.update(dict2)
+    return merged_dict
 
 
-def format_list(items: List[str]) -> str:
+def calculate_average(values: List[float]) -> float:
     """
-    Formats a list of strings into a single comma-separated
-    string with an 'and' before the last item.
-    
+    Calculates the average of a list of numbers.
+
     Args:
-        items (List[str]): The list of strings to format.
-    
+        values (List[float]): A list of float numbers.
+
     Returns:
-        str: The formatted string.
+        float: The average of the numbers.
     """
-    if not items:
-        return ''
-    if len(items) == 1:
-        return items[0]
-    return ', '.join(items[:-1]) + ' and ' + items[-1]
+    if not values:
+        return 0.0
+    return sum(values) / len(values)  
