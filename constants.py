@@ -1,35 +1,27 @@
-TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+MAX_CONNECTIONS = 100
+TIMEOUT_SECONDS = 30
+RETRY_ATTEMPTS = 5
 
-STATUS_ACTIVE = 'active'
-STATUS_INACTIVE = 'inactive'
-STATUS_PENDING = 'pending'
+# File paths
+LOG_FILE_PATH = './logs/app.log'
+DATA_FILE_PATH = './data/app_data.json'
+CONFIG_FILE_PATH = './config/app_config.yaml'
 
-ERROR_CODE_NOT_FOUND = 404
-ERROR_CODE_SERVER_ERROR = 500
+# API configurations
+API_BASE_URL = 'https://api.example.com'
+API_VERSION = 'v1'
 
-DEFAULT_PAGE_SIZE = 20
-DEFAULT_TIMEOUT = 30
+# Response codes
+HTTP_OK = 200
+HTTP_NOT_FOUND = 404
+HTTP_INTERNAL_ERROR = 500
 
-LOG_LEVEL_DEBUG = 'DEBUG'
-LOG_LEVEL_INFO = 'INFO'
-LOG_LEVEL_WARNING = 'WARNING'
-LOG_LEVEL_ERROR = 'ERROR'
+# User roles
+ROLE_ADMIN = 'admin'
+ROLE_USER = 'user'
+ROLE_GUEST = 'guest'
 
-API_BASE_URL = 'https://api.example.com/v1/' 
-
-SUPPORTED_FILE_EXTENSIONS = ['.txt', '.csv', '.json', '.xml']
-
-def get_status_codes():
-    return {
-        'active': STATUS_ACTIVE,
-        'inactive': STATUS_INACTIVE,
-        'pending': STATUS_PENDING
-    }
-
-def get_log_levels():
-    return {
-        'debug': LOG_LEVEL_DEBUG,
-        'info': LOG_LEVEL_INFO,
-        'warning': LOG_LEVEL_WARNING,
-        'error': LOG_LEVEL_ERROR
-    }
+# Other constants
+DEFAULT_LANGUAGE = 'en'
+ENABLE_LOGGING = True
+ENABLE_DEBUG_MODE = False
