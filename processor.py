@@ -1,26 +1,43 @@
-import sys
-import re
+from typing import List
 
-# Function to validate user input
-def validate_input(user_input):
-    if not user_input:
-        return False, 'Input cannot be empty.'
-    if not re.match('^[a-zA-Z0-9_]+$', user_input):
-        return False, 'Input can only contain alphanumeric characters and underscores.'
-    return True, ''
 
-# Main processing loop
-def main_loop():
-    while True:
-        user_input = input('Enter a command (or type "exit" to quit): ')
-        valid, message = validate_input(user_input)
-        if user_input.lower() == 'exit':
-            print('Exiting program.')
-            break
-        if not valid:
-            print(f'Error: {message}')
-            continue
-        print(f'You entered a valid command: {user_input}')
+def process_data(data: List[int]) -> int:
+    """
+    Processes the list of integers.
 
-if __name__ == '__main__':
-    main_loop()
+    Args:
+        data (List[int]): A list of integers to process.
+
+    Returns:
+        int: The sum of integers in the list.
+    """
+    total = sum(data)
+    return total
+
+
+def filter_data(data: List[int], threshold: int) -> List[int]:
+    """
+    Filters out integers less than the specified threshold.
+
+    Args:
+        data (List[int]): A list of integers to filter.
+        threshold (int): The threshold value.
+
+    Returns:
+        List[int]: A list of integers that are greater than or equal to the threshold.
+    """
+    return [num for num in data if num >= threshold]
+
+
+def main() -> None:
+    """
+    Main function to demonstrate processing and filtering of data.
+    """
+    sample_data = [1, 2, 3, 4, 5]
+    threshold_value = 3
+    print(f"Sum: {process_data(sample_data)}")
+    print(f"Filtered Data: {filter_data(sample_data, threshold_value)}")
+
+
+if __name__ == "__main__":
+    main()
