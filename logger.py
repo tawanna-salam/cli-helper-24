@@ -1,28 +1,25 @@
 import logging
+from logging.handlers import RotatingFileHandler
 
-# Configure logging settings
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Set up logging configuration
+LOG_FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
+LOG_FILE = 'app.log'
 
-class Logger:
-    def __init__(self, name):
-        self.logger = logging.getLogger(name)
+# Create a logger
+logger = logging.getLogger('cli-helper-24')
+logger.setLevel(logging.DEBUG)
 
-    def info(self, message):
-        self.logger.info(message)
+# Set up rotation handler
+handler = RotatingFileHandler(LOG_FILE, maxBytes=5*1024*1024, backupCount=2)
+handler.setFormatter(logging.Formatter(LOG_FORMAT))
 
-    def error(self, message):
-        self.logger.error(message)
+# Add the handler to the logger
+logger.addHandler(handler)
 
-    def warn(self, message):
-        self.logger.warning(message)
-
-    def debug(self, message):
-        self.logger.debug(message)
-
-# Example usage
+# Example usage of logger
 if __name__ == '__main__':
-    log = Logger('cli-helper-24')
-    log.info('This is an info message')
-    log.debug('This is a debug message')
-    log.warn('This is a warning message')
-    log.error('This is an error message')
+    logger.debug('This is a debug message')
+    logger.info('Informational message')
+    logger.warning('Warning message')
+    logger.error('Error message')
+    logger.critical('Critical message')
