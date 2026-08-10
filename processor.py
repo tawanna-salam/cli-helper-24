@@ -1,43 +1,36 @@
-from typing import List
+from typing import List, Dict
 
 
-def process_data(data: List[int]) -> int:
+def process_data(data: List[Dict[str, int]]) -> List[int]:
     """
-    Processes the list of integers.
+    Process a list of dictionaries and return a list of summed values.
 
-    Args:
-        data (List[int]): A list of integers to process.
+    Each dictionary in the input list should have string keys and integer values.
+    This function sums the values of each dictionary and returns the result in a list.
+
+    Parameters:
+    data (List[Dict[str, int]]): A list of dictionaries to process.
 
     Returns:
-        int: The sum of integers in the list.
+    List[int]: A list of summed integer values from the dictionaries.
     """
-    total = sum(data)
-    return total
-
-
-def filter_data(data: List[int], threshold: int) -> List[int]:
-    """
-    Filters out integers less than the specified threshold.
-
-    Args:
-        data (List[int]): A list of integers to filter.
-        threshold (int): The threshold value.
-
-    Returns:
-        List[int]: A list of integers that are greater than or equal to the threshold.
-    """
-    return [num for num in data if num >= threshold]
-
+    results = []
+    for entry in data:
+        total = sum(entry.values())
+        results.append(total)
+    return results
 
 def main() -> None:
     """
-    Main function to demonstrate processing and filtering of data.
+    Main function to demonstrate data processing.
     """
-    sample_data = [1, 2, 3, 4, 5]
-    threshold_value = 3
-    print(f"Sum: {process_data(sample_data)}")
-    print(f"Filtered Data: {filter_data(sample_data, threshold_value)}")
+    sample_data = [
+        {'a': 1, 'b': 2, 'c': 3},
+        {'x': 4, 'y': 5},
+        {'foo': 10, 'bar': 20, 'baz': 30},
+    ]
+    processed = process_data(sample_data)
+    print(processed)
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
