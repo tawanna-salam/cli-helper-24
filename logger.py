@@ -1,25 +1,31 @@
-import logging
-from logging.handlers import RotatingFileHandler
+import logging  
+import os  
+from logging.handlers import RotatingFileHandler  
 
-# Set up logging configuration
-LOG_FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
-LOG_FILE = 'app.log'
+# Logger configuration function  
+def setup_logger(log_file='app.log',  
+                log_level=logging.DEBUG,  
+                max_bytes=5 * 1024 * 1024,  
+                backup_count=3):  
+    # Create a logger  
+    logger = logging.getLogger(__name__)  
+    logger.setLevel(log_level)  
 
-# Create a logger
-logger = logging.getLogger('cli-helper-24')
-logger.setLevel(logging.DEBUG)
+    # Create a rotating file handler  
+    handler = RotatingFileHandler(log_file, maxBytes=max_bytes, backupCount=backup_count)  
+    handler.setLevel(log_level)  
 
-# Set up rotation handler
-handler = RotatingFileHandler(LOG_FILE, maxBytes=5*1024*1024, backupCount=2)
-handler.setFormatter(logging.Formatter(LOG_FORMAT))
+    # Create a logging format  
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')  
+    handler.setFormatter(formatter)  
 
-# Add the handler to the logger
-logger.addHandler(handler)
+    # Add the handler to the logger  
+    logger.addHandler(handler)  
+    return logger  
 
-# Example usage of logger
-if __name__ == '__main__':
-    logger.debug('This is a debug message')
-    logger.info('Informational message')
-    logger.warning('Warning message')
-    logger.error('Error message')
-    logger.critical('Critical message')
+# Example usage  
+if __name__ == '__main__':  
+    log = setup_logger()  
+    log.info('Logger setup complete.')  
+    log.warning('This is a warning message.')  
+    log.error('This is an error message.')  
