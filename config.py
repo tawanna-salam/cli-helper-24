@@ -1,35 +1,40 @@
 import json
 import os
 
+DEFAULT_CONFIG = {
+    'resolution': '1920x1080',
+    'fullscreen': True,
+    'volume': 75,
+    'controls': {
+        'move_up': 'W',
+        'move_down': 'S',
+        'shoot': 'SPACE',
+    }
+}
+
 class ConfigLoader:
-    def __init__(self, default_config_path, user_config_path):
-        self.default_config_path = default_config_path
-        self.user_config_path = user_config_path
-        self.config = self.load_config()
+    def __init__(self, config_file='config.json'):
+        self.config_file = config_file
+        self.config = DEFAULT_CONFIG
+        self.load_config()
 
     def load_config(self):
-        # Load default configuration
-        config = self.load_json(self.default_config_path)
-        # Load user configuration, if it exists
-        user_config = self.load_json(self.user_config_path)
-        if user_config:
-            config.update(user_config)  # Override defaults with user settings
-        return config
+        if os.path.exists(self.config_file):
+            with open(self.config_file, 'r') as file:
+                user_config = json.load(file)
+                self.config = {**DEFAULT_CONFIG, **user_config}
 
-    def load_json(self, path):
-        try:
-            if os.path.exists(path):
-                with open(path, 'r') as f:
-                    return json.load(f)
-            return {}
-        except json.JSONDecodeError:
-            print(f'Error reading JSON from {path}')
-            return {}
-        except Exception as e:
-            print(f'Unexpected error: {e}')
-            return {}
+    def get(self, key, default=None):
+        return self.config.get(key, default)
 
-# Example usage:
+    def set(self, key, value):
+        self.config[key] = value
+        self.save_config()
+
+    def save_config(self):
+        with open(self.config_file, 'w') as file:
+            json.dump(self.config, file, indent=4)
+
 if __name__ == '__main__':
-    loader = ConfigLoader('default_config.json', 'user_config.json')
-    print(loader.config)  # Output the loaded configuration
+    config_loader = ConfigLoader()
+    print(config_loader.config)
