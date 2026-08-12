@@ -1,27 +1,26 @@
-MAX_CONNECTIONS = 100
-TIMEOUT_SECONDS = 30
-RETRY_ATTEMPTS = 5
+import time
+import random
 
-# File paths
-LOG_FILE_PATH = './logs/app.log'
-DATA_FILE_PATH = './data/app_data.json'
-CONFIG_FILE_PATH = './config/app_config.yaml'
+RETRY_ATTEMPTS = 3
+RETRY_DELAY = 2
 
-# API configurations
-API_BASE_URL = 'https://api.example.com'
-API_VERSION = 'v1'
+class NetworkError(Exception):
+    pass
 
-# Response codes
-HTTP_OK = 200
-HTTP_NOT_FOUND = 404
-HTTP_INTERNAL_ERROR = 500
-
-# User roles
-ROLE_ADMIN = 'admin'
-ROLE_USER = 'user'
-ROLE_GUEST = 'guest'
-
-# Other constants
-DEFAULT_LANGUAGE = 'en'
-ENABLE_LOGGING = True
-ENABLE_DEBUG_MODE = False
+class Retry:
+    @staticmethod
+    def with_retry(func):
+        def wrapper(*args, **kwargs):
+            attempts = 0
+            while attempts < RETRY_ATTEMPTS:
+                try:
+                    return func(*args, **kwargs)
+                except NetworkError as e:
+                    attempts += 1
+                    if attempts == RETRY_ATTEMPTS:
+                        print(f'Operation failed after {attempts} attempts: {e}')
+                        raise
+                    delay = RETRY_DELAY + random.uniform(0, 1)
+                    print(f'Retrying in {delay:.2f} seconds...')
+                    time.sleep(delay)
+        return wrapper
