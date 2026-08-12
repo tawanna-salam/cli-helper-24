@@ -1,36 +1,29 @@
+import json
 from typing import List, Dict
 
+class GameDataProcessor:
+    def __init__(self, data: List[Dict]):
+        self.data = data
 
-def process_data(data: List[Dict[str, int]]) -> List[int]:
-    """
-    Process a list of dictionaries and return a list of summed values.
+    def filter_by_genre(self, genre: str) -> List[Dict]:
+        filtered_data = [game for game in self.data if game.get('genre') == genre]
+        return filtered_data
 
-    Each dictionary in the input list should have string keys and integer values.
-    This function sums the values of each dictionary and returns the result in a list.
+    def sort_by_rating(self) -> List[Dict]:
+        sorted_data = sorted(self.data, key=lambda x: x.get('rating', 0), reverse=True)
+        return sorted_data
 
-    Parameters:
-    data (List[Dict[str, int]]): A list of dictionaries to process.
+    def to_json(self) -> str:
+        return json.dumps(self.data, indent=4)
 
-    Returns:
-    List[int]: A list of summed integer values from the dictionaries.
-    """
-    results = []
-    for entry in data:
-        total = sum(entry.values())
-        results.append(total)
-    return results
-
-def main() -> None:
-    """
-    Main function to demonstrate data processing.
-    """
-    sample_data = [
-        {'a': 1, 'b': 2, 'c': 3},
-        {'x': 4, 'y': 5},
-        {'foo': 10, 'bar': 20, 'baz': 30},
-    ]
-    processed = process_data(sample_data)
-    print(processed)
-
+# Example usage
 if __name__ == '__main__':
-    main()
+    sample_data = [
+        {'title': 'Game A', 'genre': 'Action', 'rating': 9.1},
+        {'title': 'Game B', 'genre': 'Adventure', 'rating': 8.5},
+        {'title': 'Game C', 'genre': 'Action', 'rating': 9.5},
+    ]
+    processor = GameDataProcessor(sample_data)
+    print(processor.filter_by_genre('Action'))  # Filter Action games
+    print(processor.sort_by_rating())  # Sort all games by rating
+    print(processor.to_json())  # Get JSON representation of data
