@@ -1,29 +1,34 @@
-import re
-
-def is_valid_email(email):
-    """Check if the provided email is valid."""
-    email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    return re.match(email_regex, email) is not None
-
-
-def is_positive_integer(value):
-    """Check if the value is a positive integer."""
-    if isinstance(value, int) and value > 0:
-        return True
-    return False
+def validate_username(username):
+    if not isinstance(username, str):
+        raise ValueError('Username must be a string.')
+    if len(username) < 3 or len(username) > 20:
+        raise ValueError('Username must be between 3 and 20 characters.')
+    if not username.isalnum():
+        raise ValueError('Username must be alphanumeric.')
+    return True
 
 
-def is_valid_url(url):
-    """Check if the provided URL is valid."""
-    url_regex = r'^(https?|ftp)://[\w.-]+(:\d+)?(/[\w.-]*)*$'
-    return re.match(url_regex, url) is not None
+def validate_score(score):
+    if not isinstance(score, int):
+        raise ValueError('Score must be an integer.')
+    if score < 0:
+        raise ValueError('Score cannot be negative.')
+    return True
 
 
-def is_non_empty_string(value):
-    """Check if the value is a non-empty string."""
-    return isinstance(value, str) and len(value) > 0
+def validate_level(level):
+    if not isinstance(level, int):
+        raise ValueError('Level must be an integer.')
+    if level < 1:
+        raise ValueError('Level must be at least 1.')
+    return True
 
 
-def is_in_range(value, min_value, max_value):
-    """Check if the value is within a specified range."""
-    return min_value <= value <= max_value
+def validate_input(data):
+    try:
+        validate_username(data['username'])
+        validate_score(data['score'])
+        validate_level(data['level'])
+    except ValueError as e:
+        return {'status': 'error', 'message': str(e)}
+    return {'status': 'success', 'message': 'Input is valid.'}
