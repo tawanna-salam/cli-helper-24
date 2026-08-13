@@ -1,28 +1,23 @@
 import json
 import os
 
-class ConfigLoader:
-    def __init__(self, default_config: dict):
-        # Initialize with default configuration
-        self.default_config = default_config
-        self.loaded_config = {}
-
-    def load_config(self, filepath: str) -> dict:
-        # Load configuration from a specified file path
-        if os.path.exists(filepath):
-            with open(filepath, 'r') as config_file:
-                self.loaded_config = json.load(config_file)
-        else:
-            print(f'Config file not found. Using defaults.')
-        return {**self.default_config, **self.loaded_config}
+def load_config(config_file='config.json', defaults=None):
+    """Load configuration from a JSON file with defaults."""
+    if defaults is None:
+        defaults = {}
+    
+    if not os.path.isfile(config_file):
+        return defaults
+    
+    with open(config_file, 'r') as file:
+        try:
+            config = json.load(file)
+        except json.JSONDecodeError:
+            return defaults
+        
+    return {**defaults, **config}
 
 if __name__ == '__main__':
-    # Example usage of ConfigLoader
-    default_settings = {
-        'volume': 70,
-        'resolution': '1920x1080',
-        'fullscreen': True
-    }
-    config_loader = ConfigLoader(default_settings)
-    config = config_loader.load_config('config.json')
-    print(config)
+    default_settings = {'resolution': '1920x1080', 'volume': 75}
+    settings = load_config('game_config.json', default_settings)
+    print(settings)
