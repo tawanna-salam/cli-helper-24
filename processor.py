@@ -1,29 +1,32 @@
-import json
-from typing import List, Dict
+import time
 
-class GameDataProcessor:
-    def __init__(self, data: List[Dict]):
-        self.data = data
+class GameProcessor:
+    def __init__(self):
+        self.current_state = 'idle'
+        self.last_update_time = time.time()
 
-    def filter_by_genre(self, genre: str) -> List[Dict]:
-        filtered_data = [game for game in self.data if game.get('genre') == genre]
-        return filtered_data
+    def update_state(self, new_state):
+        current_time = time.time()
+        if current_time - self.last_update_time >= 1:  # Update every 1 second
+            self.current_state = new_state
+            self.last_update_time = current_time
+            print(f'Game state updated to: {self.current_state}')
+        else:
+            print('State update skipped to optimize performance.')
 
-    def sort_by_rating(self) -> List[Dict]:
-        sorted_data = sorted(self.data, key=lambda x: x.get('rating', 0), reverse=True)
-        return sorted_data
+    def process_input(self, input_action):
+        if self.current_state == 'playing':
+            self.perform_action(input_action)
+        else:
+            print('Input ignored, not in a playable state.')
 
-    def to_json(self) -> str:
-        return json.dumps(self.data, indent=4)
+    def perform_action(self, action):
+        print(f'Performing action: {action}')
 
-# Example usage
 if __name__ == '__main__':
-    sample_data = [
-        {'title': 'Game A', 'genre': 'Action', 'rating': 9.1},
-        {'title': 'Game B', 'genre': 'Adventure', 'rating': 8.5},
-        {'title': 'Game C', 'genre': 'Action', 'rating': 9.5},
-    ]
-    processor = GameDataProcessor(sample_data)
-    print(processor.filter_by_genre('Action'))  # Filter Action games
-    print(processor.sort_by_rating())  # Sort all games by rating
-    print(processor.to_json())  # Get JSON representation of data
+    processor = GameProcessor()
+    processor.update_state('playing')
+    time.sleep(2)
+    processor.process_input('move_forward')
+    processor.update_state('paused')
+    processor.process_input('move_backward')
