@@ -1,16 +1,17 @@
 # cli-helper-24
 
-cli-helper-24 is a powerful command-line interface (CLI) tool designed to enhance your gaming experience by providing real-time game statistics, session tracking, and performance analysis. Built with Python, this utility is perfect for gamers who want to maximize their gameplay efficiency.
+cli-helper-24 is a powerful command-line interface tool designed to streamline common tasks for gamers and game developers alike. Built in Python, this utility enhances your gaming experience by providing quick access to essential functions like game management, status tracking, and configuration.
 
 ## Features
-- **Game Session Tracker**: Automatically logs your gaming sessions, including start and end times, to help you manage your gaming hours effectively.
-- **Performance Analytics**: Provides comprehensive insights on your gameplay, enabling you to identify strengths and weaknesses through detailed performance metrics.
-- **Custom Notifications**: Set up customizable alerts for in-game events, ensuring you never miss crucial moments during your sessions.
-- **Cross-Platform Compatibility**: Works seamlessly on Windows, macOS, and Linux, allowing you to use it regardless of your operating system.
+
+- **Game Launcher:** Easily launch your favorite games with customizable profiles to automate settings like resolution and graphics quality.
+- **Performance Tracker:** Monitor CPU, GPU, and memory usage in real-time while gaming, helping you optimize performance on the fly.
+- **Session Logger:** Automatically log your gaming sessions with timestamps, allowing you to keep track of playtime and achievements easily.
+- **Configuration Manager:** Effortlessly manage game configurations and mods via simple command-line options, reducing setup time and avoiding conflicts.
 
 ## Installation
 
-To get started with cli-helper-24, clone the repository and install the required dependencies:
+To install cli-helper-24, make sure you have Python 3.6 or higher and follow these commands:
 
 ```bash
 git clone https://github.com/yourusername/cli-helper-24.git
@@ -18,32 +19,28 @@ cd cli-helper-24
 pip install -r requirements.txt
 ```
 
-## Basic Usage Example
-
-Once installed, you can start tracking your gaming sessions by running the tool in your terminal:
+Alternatively, you can install it directly via pip:
 
 ```bash
-python cli_helper.py --start
+pip install cli-helper-24
 ```
 
-This command initiates a new session. To stop tracking, simply run:
+## Basic Usage
+
+To launch a game with your preferred settings, use the following command:
 
 ```bash
-python cli_helper.py --stop
+cli-helper-24 launch --game "GameName" --resolution "1920x1080" --graphics "High"
 ```
 
-Your session data will be saved and can be reviewed anytime by executing:
+For performance tracking, simply execute:
 
 ```bash
-python cli_helper.py --report
+cli-helper-24 track --session_name "Gamer_1"
 ```
 
-## License
+This will initiate the performance monitor and log your gaming session for later reference.
 
-![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
+[![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-Enhance your gaming experience with cli-helper-24 and take your skills to the next level! For issues, features requests, or contributions, feel free to raise an issue or create a pull request. Happy gaming!
+Join the cli-helper-24 community on GitHub to contribute, report issues, or request features to enhance our gaming toolkit further!
