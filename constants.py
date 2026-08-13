@@ -1,26 +1,32 @@
-import time
-import random
+MAX_PLAYERS = 100
+DEFAULT_GAME_MODE = 'classic'
+DEFAULT_MAP = 'forest'
 
-RETRY_ATTEMPTS = 3
-RETRY_DELAY = 2
+# Constants defining scoring criteria
+SCORE_PER_KILL = 10
+SCORE_PER_OBJECTIVE = 50
 
-class NetworkError(Exception):
-    pass
+# Game settings
+FRAME_RATE = 60
+TICK_RATE = 30
 
-class Retry:
-    @staticmethod
-    def with_retry(func):
-        def wrapper(*args, **kwargs):
-            attempts = 0
-            while attempts < RETRY_ATTEMPTS:
-                try:
-                    return func(*args, **kwargs)
-                except NetworkError as e:
-                    attempts += 1
-                    if attempts == RETRY_ATTEMPTS:
-                        print(f'Operation failed after {attempts} attempts: {e}')
-                        raise
-                    delay = RETRY_DELAY + random.uniform(0, 1)
-                    print(f'Retrying in {delay:.2f} seconds...')
-                    time.sleep(delay)
-        return wrapper
+# Levels and scaling
+LEVEL_UP_XP = {1: 100, 2: 300, 3: 600, 4: 1000}
+
+# Color palette for UI
+COLOR_PRIMARY = '#3498db'
+COLOR_SECONDARY = '#2ecc71'
+COLOR_ERROR = '#e74c3c'
+
+# Game physics constants
+GRAVITY = 9.81
+JUMP_HEIGHT = 1.5
+
+# Audio settings
+DEFAULT_VOLUME = 0.5
+MAX_VOLUME = 1.0
+
+# Difficulty settings
+DIFFICULTY_EASY = 'easy'
+DIFFICULTY_NORMAL = 'normal'
+DIFFICULTY_HARD = 'hard'
