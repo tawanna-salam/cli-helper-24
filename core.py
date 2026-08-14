@@ -1,42 +1,24 @@
-from typing import List, Tuple
+import sys
 
+class InputError(Exception):
+    pass
 
-def calculate_score(player_moves: List[Tuple[int, int]]) -> int:
-    """
-    Calculate the total score based on player moves.
+def validate_input(user_input):
+    if not user_input.isdigit() or int(user_input) < 1 or int(user_input) > 10:
+        raise InputError('Input must be a number between 1 and 10.')
+    return int(user_input)
 
-    Each move is a tuple of (x, y) coordinates, and the score is determined
-    by the distance from the origin (0, 0).
-
-    Args:
-        player_moves (List[Tuple[int, int]]): A list of moves as tuples of coordinates.
-
-    Returns:
-        int: The total score calculated from all moves.
-    """
-    total_score = 0
-    for x, y in player_moves:
-        distance = (x ** 2 + y ** 2) ** 0.5
-        total_score += int(distance)
-    return total_score
-
-
-def determine_winner(scores: List[int]) -> int:
-    """
-    Determine the index of the player with the highest score.
-
-    Args:
-        scores (List[int]): A list of scores for each player.
-
-    Returns:
-        int: The index of the winning player.
-    """
-    return scores.index(max(scores))
-
+def main():
+    while True:
+        user_input = input('Enter a number between 1 and 10 (or type exit to quit): ').strip()
+        if user_input.lower() == 'exit':
+            print('Exiting the program. Goodbye!')
+            break
+        try:
+            validated_input = validate_input(user_input)
+            print(f'You entered: {validated_input}')
+        except InputError as e:
+            print(e)
 
 if __name__ == '__main__':
-    moves = [(1, 2), (3, 4), (5, 6)]
-    score = calculate_score(moves)
-    print(f"Total score: {score}")
-    winner = determine_winner([10, 20, 15])
-    print(f"Winner index: {winner}")
+    main()
