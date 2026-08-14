@@ -1,32 +1,40 @@
-import os
-import json
-from typing import Any, Dict
+import random
 
-def read_json_file(filepath: str) -> Dict[str, Any]:
-    """Reads a JSON file and returns its content as a dictionary."""
-    if not os.path.isfile(filepath):
-        raise FileNotFoundError(f"File not found: {filepath}")
-    with open(filepath, 'r', encoding='utf-8') as file:
-        return json.load(file)
+class GameError(Exception):
+    pass
 
+class Game:
+    def __init__(self, max_score=100):
+        self.max_score = max_score
+        self.current_score = 0
 
-def write_json_file(filepath: str, data: Dict[str, Any]) -> None:
-    """Writes a dictionary to a JSON file."""
-    with open(filepath, 'w', encoding='utf-8') as file:
-        json.dump(data, file, ensure_ascii=False, indent=4)
+    def play_round(self):
+        try:
+            score = random.randint(1, 20)
+            self.current_score += score
+            self.check_score()
+        except Exception as e:
+            raise GameError(f"An error occurred during gameplay: {e}")
 
+    def check_score(self):
+        if self.current_score < 0:
+            raise GameError("Score cannot be negative.")
+        elif self.current_score > self.max_score:
+            self.current_score = self.max_score
+            print("Max score reached. Resetting to max.")
 
-def merge_dicts(dict1: Dict[str, Any], dict2: Dict[str, Any]) -> Dict[str, Any]:
-    """Merges two dictionaries into one."""
-    merged = dict1.copy()
-    merged.update(dict2)
-    return merged
+    def get_score(self):
+        return self.current_score
 
+    def reset_game(self):
+        self.current_score = 0
 
-def clear_temp_files(directory: str) -> None:
-    """Deletes all files in the given directory."""
-    for filename in os.listdir(directory):
-        file_path = os.path.join(directory, filename)
-        if os.path.isfile(file_path):
-            os.remove(file_path)
-
+# Example usage
+if __name__ == '__main__':
+    game = Game()
+    for _ in range(10):
+        game.play_round()
+        print(f"Current Score: {game.get_score()}")
+        
+    game.reset_game()  # Reset game after rounds
+    print(f"Score after reset: {game.get_score()}")
