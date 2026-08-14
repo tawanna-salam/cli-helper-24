@@ -1,43 +1,35 @@
-from typing import List, Dict, Any
+import json
+from typing import Any, Dict
 
-
-def calculate_score(player_stats: Dict[str, int]) -> int:
+def save_game_data(file_path: str, game_data: Dict[str, Any]) -> None:
     """
-    Calculate the total score for a player based on their statistics.
-
-    Args:
-        player_stats (Dict[str, int]): A dictionary containing player stats such as 'kills', 'deaths', and 'assists'.
-
-    Returns:
-        int: The total score calculated by the formula: kills * 10 - deaths * 5 + assists * 2.
+    Saves game data to a specified JSON file.
+    
+    :param file_path: The path to the JSON file where game data will be saved.
+    :param game_data: A dictionary containing game data to save.
     """
-    score = player_stats.get('kills', 0) * 10
-    score -= player_stats.get('deaths', 0) * 5
-    score += player_stats.get('assists', 0) * 2
-    return score
+    with open(file_path, 'w') as file:
+        json.dump(game_data, file, indent=4)
 
 
-def display_leaderboard(players: List[Dict[str, Any]]) -> None:
+def load_game_data(file_path: str) -> Dict[str, Any]:
     """
-    Display the leaderboard for players sorted by their scores in descending order.
-
-    Args:
-        players (List[Dict[str, Any]]): A list of player dictionaries containing 'name' and 'stats'.
+    Loads game data from a specified JSON file.
+    
+    :param file_path: The path to the JSON file to load.
+    :return: A dictionary containing the loaded game data.
     """
-    leaderboard = sorted(players, key=lambda p: calculate_score(p['stats']), reverse=True)
-    for rank, player in enumerate(leaderboard, start=1):
-        print(f"{rank}. {player['name']} - Score: {calculate_score(player['stats'])}")
+    with open(file_path, 'r') as file:
+        return json.load(file)
 
 
-def validate_player_data(player_data: Dict[str, Any]) -> bool:
+def update_game_data(file_path: str, updates: Dict[str, Any]) -> None:
     """
-    Validate the player's data to ensure it contains the necessary fields.
-
-    Args:
-        player_data (Dict[str, Any]): A dictionary containing player information.
-
-    Returns:
-        bool: True if validation passes, False otherwise.
+    Updates existing game data with new information.
+    
+    :param file_path: The path to the JSON file containing existing game data.
+    :param updates: A dictionary with updates to apply to the game data.
     """
-    required_fields = {'name', 'stats'}
-    return required_fields.issubset(player_data.keys())
+    game_data = load_game_data(file_path)
+    game_data.update(updates)
+    save_game_data(file_path, game_data)
