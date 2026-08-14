@@ -1,32 +1,37 @@
+import random
 import time
 
 class GameProcessor:
     def __init__(self):
-        self.current_state = 'idle'
-        self.last_update_time = time.time()
+        self.score = 0
+        self.level = 1
+        self.is_running = True
+        self.max_level = 10
 
-    def update_state(self, new_state):
-        current_time = time.time()
-        if current_time - self.last_update_time >= 1:  # Update every 1 second
-            self.current_state = new_state
-            self.last_update_time = current_time
-            print(f'Game state updated to: {self.current_state}')
+    def play(self):
+        while self.is_running:
+            self.process_level()
+            self.level += 1
+            if self.level > self.max_level:
+                self.end_game()
+
+    def process_level(self):
+        print(f'--- Level {self.level} ---')
+        time.sleep(1)  # Simulating level processing time
+        outcome = self.random_outcome()
+        if outcome:
+            self.score += 10
+            print('You scored!')
         else:
-            print('State update skipped to optimize performance.')
+            print('Try again!')
 
-    def process_input(self, input_action):
-        if self.current_state == 'playing':
-            self.perform_action(input_action)
-        else:
-            print('Input ignored, not in a playable state.')
+    def random_outcome(self):
+        return random.choice([True, False])
 
-    def perform_action(self, action):
-        print(f'Performing action: {action}')
+    def end_game(self):
+        self.is_running = False
+        print(f'Game Over! Your score: {self.score}')
 
 if __name__ == '__main__':
-    processor = GameProcessor()
-    processor.update_state('playing')
-    time.sleep(2)
-    processor.process_input('move_forward')
-    processor.update_state('paused')
-    processor.process_input('move_backward')
+    game = GameProcessor()
+    game.play()
