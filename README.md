@@ -1,43 +1,49 @@
-# CLI Helper 24
+# cli-helper-24
 
-CLI Helper 24 is a powerful command-line interface tool designed to enhance the gaming experience by providing useful utilities for game developers and players alike. Built with Python, this tool simplifies common tasks and automates workflows, making it easier to manage game resources and settings.
+cli-helper-24 is a powerful command-line interface tool designed specifically for gamers who want to streamline their gaming experience. With easy-to-use commands, this Python-based helper can enhance game management, track in-game metrics, and automate repetitive tasks.
 
 ## Features
-- **Resource Management:** Effortlessly track and manage game assets, including textures, sounds, and scripts, with intuitive commands.
-- **Game Configuration:** Simplify the modification of game settings through user-friendly command options that allow bulk updates and real-time adjustments.
-- **Data Export:** Export game data in various formats (JSON, CSV) for easier integration with databases or external tools.
-- **Automated Backups:** Schedule automatic backups for important game files and project data to ensure nothing is lost during development.
+- **Game Launcher**: Quickly launch your favorite games without navigating through multiple menus.
+- **Performance Tracker**: Monitor in-game performance metrics such as frame rate, ping, and CPU usage in real-time.
+- **Automated Game Setup**: Configure and optimize game settings automatically for different scenarios, such as online play or streaming.
+- **Replay Management**: Easily organize, rename, and delete game replays or saved videos to keep your library tidy.
 
 ## Installation
 
-To install CLI Helper 24, you need Python 3.6 or higher. Run the following command in your terminal:
+To install cli-helper-24, ensure that you have Python 3.7 or higher installed on your system. Then use the following commands:
 
 ```bash
-pip install cli-helper-24
-```
-
-Alternatively, you can clone the repository and install it manually:
-
-```bash
-git clone https://github.com/Developer/cli-helper-24.git
+git clone https://github.com/yourusername/cli-helper-24.git
 cd cli-helper-24
-python setup.py install
+pip install -r requirements.txt
 ```
 
 ## Basic Usage
 
-Once installed, you can start using CLI Helper 24 with a simple command. For instance, to list all managed game resources, run:
+Once installed, you can initiate the helper tool using the command line. For example, to launch a game, run:
 
 ```bash
-cli-helper list-resources
+python cli-helper.py launch "Game Name"
 ```
 
-This command will output a neatly formatted list of all assets currently tracked within your game project. 
+To track performance metrics, use:
 
-For more advanced functionalities, refer to the [documentation](https://github.com/Developer/cli-helper-24/wiki).
+```bash
+python cli-helper.py track performance
+```
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+For more commands and options, simply execute:
+
+```bash
+python cli-helper.py --help
+```
+
+## License
+
+![MIT License](https://img.shields.io/badge/license-MIT-green.svg)
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details. 
 
 ---
 
-Feel free to explore the different commands and take advantage of CLI Helper 24 to streamline your gaming development process!
+Join the cli-helper-24 community and enhance your gaming experience today! Contributions and feedback are welcome!
