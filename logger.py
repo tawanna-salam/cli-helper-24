@@ -1,43 +1,30 @@
 import logging
+import os
+from logging.handlers import RotatingFileHandler
 
-# Configure the logger
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-logger = logging.getLogger(__name__)
-
-
-def debug(message):
-    """Log a message with DEBUG level."""
-    logger.debug(message)
+LOG_FILE = 'cli_helper.log'
+MAX_BYTES = 5 * 1024 * 1024  # 5 MB
+BACKUP_COUNT = 3
 
 
-def info(message):
-    """Log a message with INFO level."""
-    logger.info(message)
+def setup_logger():
+    logger = logging.getLogger('cli_helper')
+    logger.setLevel(logging.DEBUG)
+    
+    # Create a rotating file handler
+    handler = RotatingFileHandler(LOG_FILE, maxBytes=MAX_BYTES, backupCount=BACKUP_COUNT)
+    handler.setLevel(logging.DEBUG)
+    
+    # Create a logging format
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    
+    # Add the handler to the logger
+    logger.addHandler(handler)
+    
+    return logger
 
-
-def warning(message):
-    """Log a message with WARNING level."""
-    logger.warning(message)
-
-
-def error(message):
-    """Log a message with ERROR level."""
-    logger.error(message)
-
-
-def critical(message):
-    """Log a message with CRITICAL level."""
-    logger.critical(message)
-
-
-def set_level(level):
-    """Set the logging level based on user input."""
-    level_dict = {
-        'DEBUG': logging.DEBUG,
-        'INFO': logging.INFO,
-        'WARNING': logging.WARNING,
-        'ERROR': logging.ERROR,
-        'CRITICAL': logging.CRITICAL
-    }
-    logger.setLevel(level_dict.get(level.upper(), logging.INFO))
+# Initialize the logger for use
+if __name__ == '__main__':
+    logger = setup_logger()
+    logger.info('Logger setup complete')
