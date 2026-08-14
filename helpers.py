@@ -1,39 +1,30 @@
-import random
-from typing import List
+import time
+import requests
+from requests.exceptions import RequestException
 
-class GameError(Exception):
-    pass
 
-class NoPlayersError(GameError):
-    pass
-
-class Game:
-    def __init__(self, players: List[str]):
-        if not players:
-            raise NoPlayersError("At least one player is required.")
-        self.players = players
-        self.current_player = 0
-
-    def next_turn(self):
-        if not self.players:
-            raise NoPlayersError("Cannot proceed, no players to take turns.")
-        player = self.players[self.current_player]
-        print(f"It's {player}'s turn!")
-        self.current_player = (self.current_player + 1) % len(self.players)
-
-    def roll_dice(self):
+def retry_request(url, max_retries=3, backoff_factor=1):
+    """
+    Perform a GET request with retry logic.
+    
+    Args:
+        url (str): The URL to request.
+        max_retries (int): Maximum number of retries before failing.
+        backoff_factor (float): Backoff factor for sleep time between retries.
+    
+    Returns:
+        Response: The response object from the GET request if successful.
+    """
+    for attempt in range(max_retries):
         try:
-            return random.randint(1, 6)
-        except Exception as e:
-            raise GameError(f"Error rolling dice: {e}")
-
-if __name__ == '__main__':
-    try:
-        game = Game(["Alice", "Bob"])
-        for _ in range(5):
-            game.next_turn()
-            print(f"Rolled: {game.roll_dice()}")
-    except GameError as e:
-        print(f"Game error occurred: {e}")
-    except NoPlayersError as e:
-        print(f"Error: {e}")
+            response = requests.get(url)
+            response.raise_for_status()  # Raise an error for HTTP errors
+            return response
+        except RequestException as e:
+            if attempt < max_retries - 1:
+                sleep_time = backoff_factor * (2 ** attempt)
+                print(f'Retry {attempt + 1}/{max_retries} failed: {e}; retrying in {sleep_time} seconds...')
+                time.sleep(sleep_time)
+            else:
+                print('Max retries reached; request failed.')
+                raise
