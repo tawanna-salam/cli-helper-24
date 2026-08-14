@@ -1,40 +1,39 @@
 import random
+from typing import List
 
 class GameError(Exception):
     pass
 
+class NoPlayersError(GameError):
+    pass
+
 class Game:
-    def __init__(self, max_score=100):
-        self.max_score = max_score
-        self.current_score = 0
+    def __init__(self, players: List[str]):
+        if not players:
+            raise NoPlayersError("At least one player is required.")
+        self.players = players
+        self.current_player = 0
 
-    def play_round(self):
+    def next_turn(self):
+        if not self.players:
+            raise NoPlayersError("Cannot proceed, no players to take turns.")
+        player = self.players[self.current_player]
+        print(f"It's {player}'s turn!")
+        self.current_player = (self.current_player + 1) % len(self.players)
+
+    def roll_dice(self):
         try:
-            score = random.randint(1, 20)
-            self.current_score += score
-            self.check_score()
+            return random.randint(1, 6)
         except Exception as e:
-            raise GameError(f"An error occurred during gameplay: {e}")
+            raise GameError(f"Error rolling dice: {e}")
 
-    def check_score(self):
-        if self.current_score < 0:
-            raise GameError("Score cannot be negative.")
-        elif self.current_score > self.max_score:
-            self.current_score = self.max_score
-            print("Max score reached. Resetting to max.")
-
-    def get_score(self):
-        return self.current_score
-
-    def reset_game(self):
-        self.current_score = 0
-
-# Example usage
 if __name__ == '__main__':
-    game = Game()
-    for _ in range(10):
-        game.play_round()
-        print(f"Current Score: {game.get_score()}")
-        
-    game.reset_game()  # Reset game after rounds
-    print(f"Score after reset: {game.get_score()}")
+    try:
+        game = Game(["Alice", "Bob"])
+        for _ in range(5):
+            game.next_turn()
+            print(f"Rolled: {game.roll_dice()}")
+    except GameError as e:
+        print(f"Game error occurred: {e}")
+    except NoPlayersError as e:
+        print(f"Error: {e}")
