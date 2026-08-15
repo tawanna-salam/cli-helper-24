@@ -1,30 +1,37 @@
-import time
-import requests
-from requests.exceptions import RequestException
+import random
+import logging
 
+# Set up logging
+def setup_logging():
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(levelname)s - %(message)s')
 
-def retry_request(url, max_retries=3, backoff_factor=1):
-    """
-    Perform a GET request with retry logic.
-    
-    Args:
-        url (str): The URL to request.
-        max_retries (int): Maximum number of retries before failing.
-        backoff_factor (float): Backoff factor for sleep time between retries.
-    
-    Returns:
-        Response: The response object from the GET request if successful.
-    """
-    for attempt in range(max_retries):
-        try:
-            response = requests.get(url)
-            response.raise_for_status()  # Raise an error for HTTP errors
-            return response
-        except RequestException as e:
-            if attempt < max_retries - 1:
-                sleep_time = backoff_factor * (2 ** attempt)
-                print(f'Retry {attempt + 1}/{max_retries} failed: {e}; retrying in {sleep_time} seconds...')
-                time.sleep(sleep_time)
-            else:
-                print('Max retries reached; request failed.')
-                raise
+# Function to simulate fetching game data
+def fetch_game_data(game_id):
+    try:
+        if not isinstance(game_id, int) or game_id < 0:
+            raise ValueError('Invalid game_id: Must be a non-negative integer.')
+        # Simulate a random failure
+        if random.random() < 0.2:
+            raise ConnectionError('Failed to connect to the game database.')
+        # Simulate fetching data
+        return {'id': game_id, 'name': f'Game-{game_id}', 'rating': random.uniform(1, 10)}
+    except ValueError as ve:
+        logging.error(ve)
+        return None
+    except ConnectionError as ce:
+        logging.error(ce)
+        return None
+    except Exception as e:
+        logging.error('An unexpected error occurred: %s', e)
+        return None
+
+# Example of usage
+if __name__ == '__main__':
+    setup_logging()
+    game_data = fetch_game_data(1)  # Valid game_id
+    if game_data:
+        logging.info('Fetched game data: %s', game_data)
+    game_data = fetch_game_data(-1)  # Invalid game_id
+    game_data = fetch_game_data('abc')  # Invalid game_id
+    game_data = fetch_game_data(2)  # Another valid game_id
