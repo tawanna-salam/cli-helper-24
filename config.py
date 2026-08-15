@@ -1,23 +1,38 @@
 import json
-import os
+from pathlib import Path
 
-def load_config(config_file='config.json', defaults=None):
-    """Load configuration from a JSON file with defaults."""
-    if defaults is None:
-        defaults = {}
-    
-    if not os.path.isfile(config_file):
-        return defaults
-    
-    with open(config_file, 'r') as file:
-        try:
-            config = json.load(file)
-        except json.JSONDecodeError:
-            return defaults
-        
-    return {**defaults, **config}
+DEFAULT_CONFIG = {
+    'fullscreen': False,
+    'volume': 50,
+    'resolution': '1920x1080',
+    'controls': {
+        'jump': 'space',
+        'move_left': 'a',
+        'move_right': 'd'
+    }
+}
 
-if __name__ == '__main__':
-    default_settings = {'resolution': '1920x1080', 'volume': 75}
-    settings = load_config('game_config.json', default_settings)
-    print(settings)
+class ConfigLoader:
+    def __init__(self, config_file: str):
+        self.config_file = Path(config_file)
+        self.config = self.load_config()
+
+    def load_config(self) -> dict:
+        if self.config_file.is_file():
+            with open(self.config_file, 'r') as file:
+                return self.merge_defaults(json.load(file))
+        else:
+            return DEFAULT_CONFIG
+
+    def merge_defaults(self, user_config: dict) -> dict:
+        combined_config = DEFAULT_CONFIG.copy()
+        combined_config.update(user_config)
+        return combined_config
+
+    def get(self, key: str, default=None):
+        return self.config.get(key, default)
+
+    def set(self, key: str, value):
+        self.config[key] = value
+        with open(self.config_file, 'w') as file:
+            json.dump(self.config, file, indent=4)
