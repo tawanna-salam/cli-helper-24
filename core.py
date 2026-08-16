@@ -1,24 +1,34 @@
-import sys
+import time
+import random
 
-class InputError(Exception):
-    pass
+class GameLogic:
+    def __init__(self, max_score):
+        self.max_score = max_score
+        self.player_scores = {}
 
-def validate_input(user_input):
-    if not user_input.isdigit() or int(user_input) < 1 or int(user_input) > 10:
-        raise InputError('Input must be a number between 1 and 10.')
-    return int(user_input)
+    def add_player(self, player_name):
+        self.player_scores[player_name] = 0
 
-def main():
-    while True:
-        user_input = input('Enter a number between 1 and 10 (or type exit to quit): ').strip()
-        if user_input.lower() == 'exit':
-            print('Exiting the program. Goodbye!')
-            break
-        try:
-            validated_input = validate_input(user_input)
-            print(f'You entered: {validated_input}')
-        except InputError as e:
-            print(e)
+    def simulate_round(self, player_name):
+        # Simulates a game round and updates the player's score
+        score = random.randint(1, 10)
+        self.player_scores[player_name] += score
+        return score
 
-if __name__ == '__main__':
-    main()
+    def check_winner(self):
+        # Returns the first player to reach the max_score
+        for player, score in self.player_scores.items():
+            if score >= self.max_score:
+                return player
+        return None
+
+    def play_game(self):
+        while True:
+            for player in self.player_scores:
+                score = self.simulate_round(player)
+                print(f'{player} scored {score}, total: {self.player_scores[player]}')
+                winner = self.check_winner()
+                if winner:
+                    print(f'{winner} wins the game!')
+                    return
+            time.sleep(1)  # Add delay to slow down rounds
