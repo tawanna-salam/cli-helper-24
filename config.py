@@ -2,39 +2,26 @@ import json
 import os
 
 class ConfigLoader:
-    DEFAULTS = {
-        'theme': 'dark',
-        'language': 'en',
-        'volume': 70,
-    }
+    def __init__(self, default_config_file='default_config.json', user_config_file='user_config.json'):
+        self.default_config = self.load_config(default_config_file)
+        self.user_config = self.load_config(user_config_file)
+        self.final_config = self.merge_configs(self.default_config, self.user_config)
 
-    def __init__(self, config_file='config.json'):
-        self.config_file = config_file
-        self.config = self.load_config()
+    def load_config(self, filename):
+        if os.path.exists(filename):
+            with open(filename, 'r') as file:
+                return json.load(file)
+        return {}  # Return empty dict if file does not exist
 
-    def load_config(self):
-        if os.path.exists(self.config_file):
-            with open(self.config_file, 'r') as file:
-                try:
-                    user_config = json.load(file)
-                except json.JSONDecodeError:
-                    print('Error reading the configuration file. Using defaults.')</dev>
-                    return self.DEFAULTS
-            return {**self.DEFAULTS, **user_config}
-        else:
-            return self.DEFAULTS
+    def merge_configs(self, default, user):
+        combined = default.copy()  # Start with default config
+        combined.update(user)  # Update with user config
+        return combined
 
-    def get(self, key):
-        return self.config.get(key, None)
-
-    def set(self, key, value):
-        self.config[key] = value
-        self.save_config()
-
-    def save_config(self):
-        with open(self.config_file, 'w') as file:
-            json.dump(self.config, file, indent=4)
+    def get(self, key, default=None):
+        return self.final_config.get(key, default)
 
 # Example usage:
-# config_loader = ConfigLoader()
-# print(config_loader.get('theme'))
+# if __name__ == '__main__':
+#     config_loader = ConfigLoader()
+#     print(config_loader.get('some_option', 'default_value'))
