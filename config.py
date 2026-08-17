@@ -2,26 +2,29 @@ import json
 import os
 
 class ConfigLoader:
-    def __init__(self, default_config_file='default_config.json', user_config_file='user_config.json'):
-        self.default_config = self.load_config(default_config_file)
-        self.user_config = self.load_config(user_config_file)
-        self.final_config = self.merge_configs(self.default_config, self.user_config)
+    def __init__(self, default_config_path='default_config.json'):
+        self.default_config_path = default_config_path
+        self.config = self.load_defaults()
 
-    def load_config(self, filename):
-        if os.path.exists(filename):
-            with open(filename, 'r') as file:
-                return json.load(file)
-        return {}  # Return empty dict if file does not exist
+    def load_defaults(self):
+        if not os.path.exists(self.default_config_path):
+            raise FileNotFoundError(f'Default config file not found: {self.default_config_path}')
+        with open(self.default_config_path, 'r') as file:
+            return json.load(file)
 
-    def merge_configs(self, default, user):
-        combined = default.copy()  # Start with default config
-        combined.update(user)  # Update with user config
-        return combined
+    def load_custom(self, custom_config_path):
+        if os.path.exists(custom_config_path):
+            with open(custom_config_path, 'r') as file:
+                custom_config = json.load(file)
+            return {**self.config, **custom_config}
+        return self.config
 
-    def get(self, key, default=None):
-        return self.final_config.get(key, default)
+    def get_config(self, custom_config_path=None):
+        if custom_config_path:
+            return self.load_custom(custom_config_path)
+        return self.config
 
-# Example usage:
-# if __name__ == '__main__':
-#     config_loader = ConfigLoader()
-#     print(config_loader.get('some_option', 'default_value'))
+if __name__ == '__main__':
+    loader = ConfigLoader()
+    config = loader.get_config('user_config.json')
+    print(config)
