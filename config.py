@@ -1,30 +1,41 @@
 import json
 import os
 
-class ConfigLoader:
-    def __init__(self, default_config_path='default_config.json'):
-        self.default_config_path = default_config_path
-        self.config = self.load_defaults()
+class ConfigError(Exception):
+    pass
 
-    def load_defaults(self):
-        if not os.path.exists(self.default_config_path):
-            raise FileNotFoundError(f'Default config file not found: {self.default_config_path}')
-        with open(self.default_config_path, 'r') as file:
-            return json.load(file)
+class Config:
+    def __init__(self, file_path):
+        self.file_path = file_path
+        self.config_data = {}  
+        self.load_config()
 
-    def load_custom(self, custom_config_path):
-        if os.path.exists(custom_config_path):
-            with open(custom_config_path, 'r') as file:
-                custom_config = json.load(file)
-            return {**self.config, **custom_config}
-        return self.config
+    def load_config(self):
+        if not os.path.isfile(self.file_path):
+            raise ConfigError(f'Config file not found: {self.file_path}')
+        try:
+            with open(self.file_path, 'r') as config_file:
+                self.config_data = json.load(config_file)
+        except json.JSONDecodeError:
+            raise ConfigError('Error decoding JSON from config file')
+        except Exception as e:
+            raise ConfigError(f'Unexpected error: {str(e)}')
 
-    def get_config(self, custom_config_path=None):
-        if custom_config_path:
-            return self.load_custom(custom_config_path)
-        return self.config
+    def get(self, key, default=None):
+        if key not in self.config_data:
+            return default
+        return self.config_data[key]
 
+    def save(self):
+        try:
+            with open(self.file_path, 'w') as config_file:
+                json.dump(self.config_data, config_file, indent=4)
+        except Exception as e:
+            raise ConfigError(f'Unable to save config: {str(e)}')
+
+# Example usage
 if __name__ == '__main__':
-    loader = ConfigLoader()
-    config = loader.get_config('user_config.json')
-    print(config)
+    config = Config('settings.json')
+    print(config.get('username', 'Guest'))
+    config.config_data['username'] = 'Player1'
+    config.save()
