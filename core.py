@@ -1,34 +1,28 @@
 import time
 import random
 
-class GameLogic:
-    def __init__(self, max_score):
-        self.max_score = max_score
-        self.player_scores = {}
+class Game:
+    def __init__(self, levels):
+        self.levels = levels
+        self.current_level = 0
+        self.score = 0
 
-    def add_player(self, player_name):
-        self.player_scores[player_name] = 0
-
-    def simulate_round(self, player_name):
-        # Simulates a game round and updates the player's score
-        score = random.randint(1, 10)
-        self.player_scores[player_name] += score
-        return score
-
-    def check_winner(self):
-        # Returns the first player to reach the max_score
-        for player, score in self.player_scores.items():
-            if score >= self.max_score:
-                return player
-        return None
+    def play_level(self):
+        level_time = time.time()
+        print(f"Playing level {self.current_level + 1}...")
+        time.sleep(random.uniform(0.5, 2))  # Simulate game play
+        self.score += random.randint(10, 100)
+        self.current_level += 1
+        print(f"Level {self.current_level} completed. Score: {self.score}")
+        return time.time() - level_time
 
     def play_game(self):
-        while True:
-            for player in self.player_scores:
-                score = self.simulate_round(player)
-                print(f'{player} scored {score}, total: {self.player_scores[player]}')
-                winner = self.check_winner()
-                if winner:
-                    print(f'{winner} wins the game!')
-                    return
-            time.sleep(1)  # Add delay to slow down rounds
+        start_time = time.time()
+        for _ in range(self.levels):
+            self.play_level()
+        print(f"Game finished. Total score: {self.score}")
+        print(f"Total time: {time.time() - start_time:.2f} seconds")
+
+if __name__ == '__main__':
+    game = Game(levels=5)
+    game.play_game()
